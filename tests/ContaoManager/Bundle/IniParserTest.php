@@ -48,7 +48,7 @@ class IniParserTest extends \PHPUnit_Framework_TestCase
         /** @var ConfigInterface[] $configs */
         $configs = $this->parser->parse('with-requires');
 
-        $this->assertCount(3, $configs);
+        $this->assertCount(4, $configs);
         $this->assertInstanceOf('Contao\ManagerBundle\ContaoManager\Bundle\ConfigInterface', $configs[0]);
 
         $this->assertEquals('with-requires', $configs[0]->getName());
