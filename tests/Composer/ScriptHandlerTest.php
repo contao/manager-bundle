@@ -54,7 +54,7 @@ class ScriptHandlerTest extends \PHPUnit_Framework_TestCase
         $fs->ensureDirectoryExists($tmpdir);
         chdir($tmpdir);
 
-        $content = str_replace('../../../../', '../', file_get_contents(__DIR__.'/../../bin/contao-console'));
+        $content = str_replace('../../../../', '../', file_get_contents(__DIR__.'/../../src/Resources/bin/console'));
 
         ScriptHandler::addConsoleEntryPoint($event);
 
