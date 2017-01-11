@@ -125,7 +125,7 @@ class ScriptHandler
     {
         foreach ($composer->getRepositoryManager()->getLocalRepository()->getPackages() as $package) {
             if ('contao/manager-bundle' === $package->getName()) {
-                return $composer->getInstallationManager()->getInstallPath($package).'/bin/contao-console';
+                return $composer->getInstallationManager()->getInstallPath($package).'/src/Resources/bin/console';
             }
         }
 
