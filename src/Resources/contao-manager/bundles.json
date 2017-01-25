@@ -1,14 +1,5 @@
 [
-    "Symfony\\Bundle\\FrameworkBundle\\FrameworkBundle",
-    "Symfony\\Bundle\\SecurityBundle\\SecurityBundle",
-    "Symfony\\Bundle\\TwigBundle\\TwigBundle",
     "Symfony\\Bundle\\MonologBundle\\MonologBundle",
-    "Symfony\\Bundle\\SwiftmailerBundle\\SwiftmailerBundle",
-    "Doctrine\\Bundle\\DoctrineBundle\\DoctrineBundle",
-    "Doctrine\\Bundle\\DoctrineCacheBundle\\DoctrineCacheBundle",
-    "Knp\\Bundle\\TimeBundle\\KnpTimeBundle",
-    "Sensio\\Bundle\\FrameworkExtraBundle\\SensioFrameworkExtraBundle",
-    "Lexik\\Bundle\\MaintenanceBundle\\LexikMaintenanceBundle",
     "Contao\\ManagerBundle\\ContaoManagerBundle",
     {
         "bundle": "Contao\\CoreBundle\\ContaoCoreBundle",
