@@ -65,14 +65,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      */
     public function registerContainerConfiguration(LoaderInterface $loader, array $managerConfig)
     {
-        $loader->load('@ContaoManagerBundle/Resources/contao-manager/framework.yml');
-        $loader->load('@ContaoManagerBundle/Resources/contao-manager/security.yml');
         $loader->load('@ContaoManagerBundle/Resources/contao-manager/contao.yml');
-        $loader->load('@ContaoManagerBundle/Resources/contao-manager/twig.yml');
-        $loader->load('@ContaoManagerBundle/Resources/contao-manager/doctrine.yml');
-        $loader->load('@ContaoManagerBundle/Resources/contao-manager/swiftmailer.yml');
         $loader->load('@ContaoManagerBundle/Resources/contao-manager/monolog.yml');
-        $loader->load('@ContaoManagerBundle/Resources/contao-manager/lexik_maintenance.yml');
 
         $loader->load(function (ContainerBuilder $container) use ($loader) {
             if ('dev' === $container->getParameter('kernel.environment')) {
