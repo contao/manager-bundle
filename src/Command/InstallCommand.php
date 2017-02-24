@@ -84,7 +84,10 @@ class InstallCommand extends BaseInstallCommand
             <<<'EOF'
 <?php
 
+use Contao\ManagerBundle\ContaoManager\Plugin as ManagerBundlePlugin;
 use Contao\CoreBundle\Response\InitializeControllerResponse;
+use Contao\ManagerBundle\HttpKernel\ContaoKernel;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 use Symfony\Component\HttpFoundation\Request;
 
 if (!defined('TL_SCRIPT')) {
