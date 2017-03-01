@@ -24,11 +24,13 @@ $kernel = new ContaoKernel('prod', false);
 $kernel->setRootDir(dirname(__DIR__).'/app');
 
 // Enable the Symfony reverse proxy
-$kernel = new ContaoCache($kernel);
 Request::enableHttpMethodParameterOverride();
 
 // Handle the request
 $request = Request::createFromGlobals();
+if(!$request->cookies->has('BE_USER_AUTH')){
+	$kernel = new AppCache($kernel);
+}
 $response = $kernel->handle($request);
 $response->send();
 $kernel->terminate($request, $response);
