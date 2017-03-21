@@ -30,7 +30,6 @@ class ScriptHandler
     public static function initializeApplication(Event $event)
     {
         static::purgeCacheFolder();
-
         static::addAppDirectory();
 
         static::executeCommand('cache:clear', $event);
