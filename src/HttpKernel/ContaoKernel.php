@@ -27,6 +27,11 @@ use Symfony\Component\HttpKernel\Kernel;
 class ContaoKernel extends Kernel
 {
     /**
+     * @var string
+     */
+    private $projectDir;
+
+    /**
      * @var PluginLoader
      */
     private $pluginLoader;
@@ -35,6 +40,20 @@ class ContaoKernel extends Kernel
      * @var BundleLoader
      */
     private $bundleLoader;
+
+    /**
+     * Constructor.
+     *
+     * @param string $projectDir
+     * @param string $environment
+     * @param bool   $debug
+     */
+    public function __construct($projectDir, $environment, $debug)
+    {
+        $this->projectDir = $projectDir;
+
+        parent::__construct($environment, $debug);
+    }
 
     /**
      * {@inheritdoc}
@@ -51,10 +70,18 @@ class ContaoKernel extends Kernel
     /**
      * {@inheritdoc}
      */
+    public function getProjectDir()
+    {
+        return $this->projectDir;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getRootDir()
     {
         if (null === $this->rootDir) {
-            $this->rootDir = dirname(dirname(dirname(dirname(dirname(__DIR__))))).'/app';
+            $this->rootDir = $this->projectDir.'/app';
         }
 
         return $this->rootDir;
@@ -64,6 +91,8 @@ class ContaoKernel extends Kernel
      * Sets the application root dir.
      *
      * @param string $dir
+     *
+     * @deprecated Deprecated since version 4.4, to be removed in 5.0.
      */
     public function setRootDir($dir)
     {
@@ -75,7 +104,7 @@ class ContaoKernel extends Kernel
      */
     public function getCacheDir()
     {
-        return dirname($this->getRootDir()).'/var/cache/'.$this->getEnvironment();
+        return $this->projectDir.'/var/cache/'.$this->getEnvironment();
     }
 
     /**
@@ -83,7 +112,7 @@ class ContaoKernel extends Kernel
      */
     public function getLogDir()
     {
-        return dirname($this->getRootDir()).'/var/logs';
+        return $this->projectDir.'/var/logs';
     }
 
     /**
@@ -94,7 +123,7 @@ class ContaoKernel extends Kernel
     public function getPluginLoader()
     {
         if (null === $this->pluginLoader) {
-            $this->pluginLoader = new PluginLoader($this->getRootDir().'/../vendor/composer/installed.json');
+            $this->pluginLoader = new PluginLoader($this->projectDir.'/vendor/composer/installed.json');
         }
 
         return $this->pluginLoader;
@@ -120,7 +149,7 @@ class ContaoKernel extends Kernel
         if (null === $this->bundleLoader) {
             $parser = new DelegatingParser();
             $parser->addParser(new JsonParser());
-            $parser->addParser(new IniParser(dirname($this->getRootDir()).'/system/modules'));
+            $parser->addParser(new IniParser($this->projectDir.'/system/modules'));
 
             $this->bundleLoader = new BundleLoader($this->getPluginLoader(), new ConfigResolverFactory(), $parser);
         }
