@@ -44,9 +44,9 @@ class ContaoKernel extends Kernel
     /**
      * Constructor.
      *
-     * @param string $projectDir
-     * @param string $environment
-     * @param bool   $debug
+     * @param string|null $projectDir
+     * @param string      $environment
+     * @param bool        $debug
      */
     public function __construct($projectDir, $environment, $debug)
     {
@@ -92,11 +92,14 @@ class ContaoKernel extends Kernel
      *
      * @param string $dir
      *
-     * @deprecated Deprecated since version 4.4, to be removed in 5.0.
+     * @deprecated Deprecated since Contao 4.4, to be removed in Contao 5.0
      */
     public function setRootDir($dir)
     {
-        @trigger_error('ContaoKernel::setRootDir() is deprecated and replaced with the projectDir constructor argument since Contao 4.4.', E_USER_DEPRECATED);
+        @trigger_error(
+            'Using ContaoKernel::setRootDir() has been deprecated and will no longer work in Contao 5.0.',
+            E_USER_DEPRECATED
+        );
 
         $this->rootDir = realpath($dir) ?: null;
     }

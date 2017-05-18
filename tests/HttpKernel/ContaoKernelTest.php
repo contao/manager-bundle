@@ -33,7 +33,7 @@ class ContaoKernelTest extends TestCase
      */
     public function testInstantiation()
     {
-        $kernel = $this->createKernel(__DIR__);
+        $kernel = $this->getKernel(__DIR__);
 
         $this->assertInstanceOf('Contao\ManagerBundle\HttpKernel\ContaoKernel', $kernel);
         $this->assertInstanceOf('Symfony\Component\HttpKernel\Kernel', $kernel);
@@ -56,7 +56,7 @@ class ContaoKernelTest extends TestCase
             )
         ;
 
-        $kernel = $this->createKernel(sys_get_temp_dir());
+        $kernel = $this->getKernel(sys_get_temp_dir());
         $kernel->setBundleLoader($bundleLoader);
 
         $bundles = $kernel->registerBundles();
@@ -84,7 +84,7 @@ class ContaoKernelTest extends TestCase
             )
         ;
 
-        $kernel = $this->createKernel(sys_get_temp_dir());
+        $kernel = $this->getKernel(sys_get_temp_dir());
         $kernel->setBundleLoader($bundleLoader);
 
         include __DIR__.'/../Fixtures/HttpKernel/AppBundle.php';
@@ -97,10 +97,14 @@ class ContaoKernelTest extends TestCase
 
     /**
      * Tests the getRootDir() method.
+     *
+     * @group legacy
+     *
+     * @expectedDeprecation Using ContaoKernel::setRootDir() has been deprecated and will no longer work in Contao 5.0.
      */
     public function testGetRootDir()
     {
-        $kernel = $this->createKernel(__DIR__);
+        $kernel = $this->getKernel(__DIR__);
 
         $this->assertSame(__DIR__.'/app', $kernel->getRootDir());
 
@@ -114,7 +118,7 @@ class ContaoKernelTest extends TestCase
      */
     public function testGetCacheDir()
     {
-        $kernel = $this->createKernel(sys_get_temp_dir());
+        $kernel = $this->getKernel(sys_get_temp_dir());
 
         $this->assertSame($kernel->getProjectDir().'/var/cache/test', $kernel->getCacheDir());
     }
@@ -124,7 +128,7 @@ class ContaoKernelTest extends TestCase
      */
     public function testGetLogDir()
     {
-        $kernel = $this->createKernel(sys_get_temp_dir());
+        $kernel = $this->getKernel(sys_get_temp_dir());
 
         $this->assertSame($kernel->getProjectDir().'/var/logs', $kernel->getLogDir());
     }
@@ -132,7 +136,7 @@ class ContaoKernelTest extends TestCase
     /**
      * Tests the registerContainerConfiguration() method.
      *
-     * @param string $rootDir
+     * @param string $projectDir
      * @param string $expectedResult
      *
      * @dataProvider containerConfigurationProvider
@@ -158,7 +162,7 @@ class ContaoKernelTest extends TestCase
             )
         ;
 
-        $kernel = $this->createKernel($projectDir);
+        $kernel = $this->getKernel($projectDir);
         $kernel->registerContainerConfiguration($loader);
 
         $this->assertSame($expectedResult, $files);
@@ -210,7 +214,7 @@ class ContaoKernelTest extends TestCase
             ->willReturn([$this->mockConfigPlugin($loader), $this->mockConfigPlugin($loader)])
         ;
 
-        $kernel = $this->createKernel(sys_get_temp_dir());
+        $kernel = $this->getKernel(sys_get_temp_dir());
 
         $kernel->setPluginLoader($pluginLoader);
         $kernel->registerContainerConfiguration($loader);
@@ -223,16 +227,11 @@ class ContaoKernelTest extends TestCase
      *
      * @return ContaoKernel
      */
-    private function createKernel($projectDir)
+    private function getKernel($projectDir)
     {
-        /** @var PluginLoader|\PHPUnit_Framework_MockObject_MockObject $pluginLoader */
-        $pluginLoader = $this->getMockBuilder(PluginLoader::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $pluginLoader = $this->createMock(PluginLoader::class);
 
         $pluginLoader
-            ->expects($this->any())
             ->method('getInstancesOf')
             ->willReturn([])
         ;
