@@ -44,9 +44,9 @@ class ContaoKernel extends Kernel
     /**
      * Constructor.
      *
-     * @param string|null $projectDir
-     * @param string      $environment
-     * @param bool        $debug
+     * @param string $projectDir
+     * @param string $environment
+     * @param bool   $debug
      */
     public function __construct($projectDir, $environment, $debug)
     {
