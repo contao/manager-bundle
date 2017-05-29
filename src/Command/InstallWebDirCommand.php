@@ -212,9 +212,9 @@ class InstallWebDirCommand extends AbstractLockedCommand
             throw new \InvalidArgumentException('Must have username and password to set the access key.');
         }
 
-        $accessKey = hash(
-            'sha512',
-            $input->getOption('user').':'.$input->getOption('password')
+        $accessKey = password_hash(
+            $input->getOption('user').':'.$input->getOption('password'),
+            PASSWORD_DEFAULT
         );
 
         $this->addToDotEnv($projectDir, 'APP_DEV_ACCESSKEY', $accessKey);

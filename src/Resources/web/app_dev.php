@@ -15,13 +15,16 @@ use Symfony\Component\Debug\Debug;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
 
-// The check is to ensure we don't use .env in production
+/***********************************************************************************************/
+/*                               ###  READ FIRST  ###                                          */
+/* Access to debug front controllers must only be allowed on localhost or with authentication. */
+/* Use the "contao:install-web-dir" console command to set a password for the dev entry point. */
+/***********************************************************************************************/
+
 if (file_exists(__DIR__.'/../.env')) {
     (new Dotenv())->load(__DIR__.'/../.env');
 }
 
-// Access to debug front controllers is only allowed on localhost or with authentication.
-// Use the "contao:install-web-dir" console command to set a password for the dev entry point.
 $accessKey = getenv('APP_DEV_ACCESSKEY', true);
 
 if (isset($_SERVER['HTTP_CLIENT_IP'])
@@ -34,7 +37,7 @@ if (isset($_SERVER['HTTP_CLIENT_IP'])
     }
 
     if (!isset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])
-        || hash('sha512', $_SERVER['PHP_AUTH_USER'].':'.$_SERVER['PHP_AUTH_PW']) !== $accessKey
+        || !password_verify($_SERVER['PHP_AUTH_USER'].':'.$_SERVER['PHP_AUTH_PW'], $accessKey)
     ) {
         header('WWW-Authenticate: Basic realm="Contao debug"');
         header('HTTP/1.0 401 Unauthorized');
