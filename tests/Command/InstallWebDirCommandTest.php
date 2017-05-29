@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
@@ -180,7 +181,11 @@ class InstallWebDirCommandTest extends TestCase
         $commandTester->execute(['path' => $this->tmpdir, '--user' => 'foo', '--password' => 'bar']);
 
         $this->assertFileExists($this->tmpdir.'/.env');
-        $this->assertContains(hash('sha512', 'foo:bar'), file_get_contents($this->tmpdir.'/.env'));
+
+        $env = (new Dotenv())->parse(file_get_contents($this->tmpdir.'/.env'), $this->tmpdir.'/.env');
+
+        $this->assertArrayHasKey('APP_DEV_ACCESSKEY', $env);
+        $this->assertTrue(password_verify('foo:bar', $env['APP_DEV_ACCESSKEY']));
     }
 
     public function testAccesskeyFromInput()
@@ -193,7 +198,11 @@ class InstallWebDirCommandTest extends TestCase
         $this->assertContains('Please enter a password:', $commandTester->getDisplay());
 
         $this->assertFileExists($this->tmpdir.'/.env');
-        $this->assertContains(hash('sha512', 'foo:bar'), file_get_contents($this->tmpdir.'/.env'));
+
+        $env = (new Dotenv())->parse(file_get_contents($this->tmpdir.'/.env'), $this->tmpdir.'/.env');
+
+        $this->assertArrayHasKey('APP_DEV_ACCESSKEY', $env);
+        $this->assertTrue(password_verify('foo:bar', $env['APP_DEV_ACCESSKEY']));
     }
 
     public function testAccesskeyWithUserFromInput()
@@ -205,8 +214,10 @@ class InstallWebDirCommandTest extends TestCase
         $this->assertNotContains('Please enter a username:', $commandTester->getDisplay());
         $this->assertContains('Please enter a password:', $commandTester->getDisplay());
 
-        $this->assertFileExists($this->tmpdir.'/.env');
-        $this->assertContains(hash('sha512', 'foo:bar'), file_get_contents($this->tmpdir.'/.env'));
+        $env = (new Dotenv())->parse(file_get_contents($this->tmpdir.'/.env'), $this->tmpdir.'/.env');
+
+        $this->assertArrayHasKey('APP_DEV_ACCESSKEY', $env);
+        $this->assertTrue(password_verify('foo:bar', $env['APP_DEV_ACCESSKEY']));
     }
 
     public function testAccesskeyWithoutUserFromInput()
@@ -228,10 +239,14 @@ class InstallWebDirCommandTest extends TestCase
         $commandTester = new CommandTester($this->command);
         $commandTester->execute(['path' => $this->tmpdir, '--user' => 'foo', '--password' => 'bar']);
 
-        $content = "FOO=bar\nAPP_DEV_ACCESSKEY=".hash('sha512', 'foo:bar')."\n";
-
         $this->assertFileExists($this->tmpdir.'/.env');
-        $this->assertStringEqualsFile($this->tmpdir.'/.env', $content);
+
+        $env = (new Dotenv())->parse(file_get_contents($this->tmpdir.'/.env'), $this->tmpdir.'/.env');
+
+        $this->assertArrayHasKey('FOO', $env);
+        $this->assertSame('bar', $env['FOO']);
+        $this->assertArrayHasKey('APP_DEV_ACCESSKEY', $env);
+        $this->assertTrue(password_verify('foo:bar', $env['APP_DEV_ACCESSKEY']));
     }
 
     /**

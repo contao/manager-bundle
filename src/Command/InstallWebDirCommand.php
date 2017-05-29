@@ -250,6 +250,6 @@ class InstallWebDirCommand extends AbstractLockedCommand
             }
         }
 
-        $fs->dumpFile($path, $content.$key.'='.$value."\n");
+        $fs->dumpFile($path, $content.$key.'='.escapeshellarg($value)."\n");
     }
 }
