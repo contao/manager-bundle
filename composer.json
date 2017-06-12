@@ -22,7 +22,6 @@
         "contao/core-bundle": "~4.4.0@dev",
         "contao/installation-bundle": "~4.4.0@dev",
         "terminal42/header-replay-bundle": "^1.0",
-        "php-http/guzzle6-adapter": "^1.1",
         "friendsofsymfony/http-cache": "^2.0"
     },
     "require-dev": {
