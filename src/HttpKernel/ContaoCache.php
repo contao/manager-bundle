@@ -25,12 +25,19 @@ class ContaoCache extends HttpCache implements CacheInvalidation
 {
     use EventDispatchingHttpCache;
 
+    /**
+     * Constructor.
+     *
+     * @param HttpKernelInterface $kernel
+     * @param null                $cacheDir
+     *
+     * @todo Maybe provide a contao manager plugin?
+     */
     public function __construct(HttpKernelInterface $kernel, $cacheDir = null)
     {
         parent::__construct($kernel, $cacheDir);
-        $this->addSubscriber(new HeaderReplaySubscriber());
 
-        // TODO: Maybe provide a contao manager plugin?
+        $this->addSubscriber(new HeaderReplaySubscriber());
     }
 
     /**
@@ -46,8 +53,6 @@ class ContaoCache extends HttpCache implements CacheInvalidation
      */
     protected function getOptions()
     {
-        return [
-            'allow_reload' => true
-        ];
+        return ['allow_reload' => true];
     }
 }
