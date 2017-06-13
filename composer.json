@@ -16,13 +16,13 @@
         "symfony/swiftmailer-bundle": "^2.3",
         "sensio/framework-extra-bundle": "^3.0.2",
         "doctrine/doctrine-bundle": "^1.6",
+        "friendsofsymfony/http-cache": "^2.0",
         "lexik/maintenance-bundle": "^2.0",
         "nelmio/security-bundle": "^2.2",
+        "terminal42/header-replay-bundle": "^1.0",
         "contao/manager-plugin": "^2.1",
         "contao/core-bundle": "~4.4.0@dev",
-        "contao/installation-bundle": "~4.4.0@dev",
-        "terminal42/header-replay-bundle": "^1.0",
-        "friendsofsymfony/http-cache": "^2.0"
+        "contao/installation-bundle": "~4.4.0@dev"
     },
     "require-dev": {
         "composer/composer": "^1.0",
