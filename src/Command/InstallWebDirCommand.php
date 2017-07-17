@@ -110,10 +110,12 @@ class InstallWebDirCommand extends AbstractLockedCommand
             );
         }
 
-        $input->setOption(
-            'password',
-            $helper->ask($input, $output, (new Question('Please enter a password:'))->setHidden(true))
-        );
+        if (null === $input->getOption('password')) {
+            $input->setOption(
+                'password',
+                $helper->ask($input, $output, (new Question('Please enter a password:'))->setHidden(true))
+            );
+        }
 
         $user = $input->getOption('user');
         $password = $input->getOption('password');
