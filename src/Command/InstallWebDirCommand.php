@@ -96,18 +96,7 @@ class InstallWebDirCommand extends AbstractLockedCommand
      */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
-        $user = $input->getOption('user');
-        $password = $input->getOption('password');
-
-        if (true === $input->getOption('no-dev') && (null !== $user || null !== $password)) {
-            throw new \InvalidArgumentException('Cannot set a password in no-dev mode!');
-        }
-
-        if (null === $password && null !== $user) {
-            throw new \InvalidArgumentException('Cannot set a username without password.');
-        }
-
-        if (true !== $password) {
+        if (true === $input->getOption('no-dev')) {
             return;
         }
 
@@ -121,10 +110,19 @@ class InstallWebDirCommand extends AbstractLockedCommand
             );
         }
 
-        $input->setOption(
-            'password',
-            $helper->ask($input, $output, (new Question('Please enter a password:'))->setHidden(true))
-        );
+        if (null === $input->getOption('password')) {
+            $input->setOption(
+                'password',
+                $helper->ask($input, $output, (new Question('Please enter a password:'))->setHidden(true))
+            );
+        }
+
+        $user = $input->getOption('user');
+        $password = $input->getOption('password');
+
+        if (null === $password && null !== $user) {
+            throw new \InvalidArgumentException('Cannot set a username without password.');
+        }
     }
 
     /**
