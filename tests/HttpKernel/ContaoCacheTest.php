@@ -86,7 +86,7 @@ class ContaoCacheTest extends TestCase
                 'cookie',
                 'authorization'
             ],
-            'ignore_cookies' => '/^csrf_.+/',
+            'ignore_cookies' => ['/^csrf_.+/'],
         ], $options);
     }
 }

@@ -38,7 +38,9 @@ class ContaoCache extends HttpCache implements CacheInvalidation
         parent::__construct($kernel, $cacheDir);
 
         $this->addSubscriber(new HeaderReplaySubscriber(
-            ['ignore_cookies' => '/^csrf_.+/']
+            ['ignore_cookies' => [
+                '/^csrf_.+/',
+            ]]
         ));
     }
 
