@@ -66,14 +66,12 @@ class ContaoCacheTest extends TestCase
     /**
      * Tests the event subscribers and their configuration.
      */
-    public function testEventSubscribers()
+    public function testAddsTheEventSubscribers()
     {
-        /** @var \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher **/
         $dispatcher = $this->cache->getEventDispatcher();
-
         $preHandleListeners = $dispatcher->getListeners(Events::PRE_HANDLE);
-
         $headerReplayListener = $preHandleListeners[0][0];
+
         $this->assertInstanceOf(HeaderReplaySubscriber::class, $headerReplayListener);
 
         $reflection = new \ReflectionClass($headerReplayListener);
@@ -81,12 +79,15 @@ class ContaoCacheTest extends TestCase
         $optionsProperty->setAccessible(true);
         $options = $optionsProperty->getValue($headerReplayListener);
 
-        $this->assertEquals([
-            'user_context_headers' => [
-                'cookie',
-                'authorization'
+        $this->assertSame(
+            [
+                'user_context_headers' => [
+                    'cookie',
+                    'authorization',
+                ],
+                'ignore_cookies' => ['/^csrf_./'],
             ],
-            'ignore_cookies' => ['/^csrf_./'],
-        ], $options);
+            $options
+        );
     }
 }
