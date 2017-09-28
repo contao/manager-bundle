@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Contao.
  *
@@ -17,11 +19,6 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Terminal42\HeaderReplay\SymfonyCache\HeaderReplaySubscriber;
 
-/**
- * Tests the ContaoCache class.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- */
 class ContaoCacheTest extends TestCase
 {
     /**
@@ -54,18 +51,12 @@ class ContaoCacheTest extends TestCase
         $fs->remove($this->tmpdir);
     }
 
-    /**
-     * Tests the object instantiation.
-     */
-    public function testInstantiation()
+    public function testInstantiation(): void
     {
         $this->assertInstanceOf('Contao\ManagerBundle\HttpKernel\ContaoCache', $this->cache);
         $this->assertInstanceOf('Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache', $this->cache);
     }
 
-    /**
-     * Tests the event subscribers and their configuration.
-     */
     public function testAddsTheEventSubscribers()
     {
         $dispatcher = $this->cache->getEventDispatcher();
