@@ -38,7 +38,12 @@ if ($debug) {
     Debug::enable();
 }
 
-ContaoKernel::setProjectDir($projectDir);
-$kernel = new ContaoKernel($env, $debug);
-$application = new Application($kernel);
-$application->run($input);
+if(!$_SERVER['argv']) {
+	print "No arguments are set. Please make sure that 'register_argc_argv' in your php.ini is set to 'On'\n";
+}
+else {
+	ContaoKernel::setProjectDir($projectDir);
+	$kernel = new ContaoKernel($env, $debug);
+	$application = new Application($kernel);
+	$application->run($input);
+}
