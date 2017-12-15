@@ -10,7 +10,6 @@
 
 namespace Contao\ManagerBundle\Api\Command;
 
-use Contao\ManagerBundle\Api\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,6 +18,21 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class DebugAccesskeyCommand extends Command
 {
+    /**
+     * @var string
+     */
+    private $projectDir;
+
+    /**
+     * @param string $projectDir
+     */
+    public function __construct(string $projectDir)
+    {
+        parent::__construct();
+
+        $this->projectDir = $projectDir;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -38,27 +52,20 @@ class DebugAccesskeyCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
-        $application = $this->getApplication();
-
-        if (!$application instanceof Application) {
-            throw new \RuntimeException('The application has not been set');
-        }
-
-        $this->updateDotEnv($application->getProjectDir(), 'APP_DEV_ACCESSKEY', $input->getArgument('value'));
+        $this->updateDotEnv('APP_DEV_ACCESSKEY', $input->getArgument('value'));
     }
 
     /**
      * Appends value to the .env file, removing a line with the given key.
      *
-     * @param string      $projectDir
      * @param string      $key
      * @param string|null $value
      */
-    private function updateDotEnv(string $projectDir, string $key, ?string $value): void
+    private function updateDotEnv(string $key, ?string $value): void
     {
         $fs = new Filesystem();
 
-        $path = $projectDir.'/.env';
+        $path = $this->projectDir.'/.env';
         $exists = $fs->exists($path);
         $content = '';
 

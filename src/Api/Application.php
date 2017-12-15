@@ -109,9 +109,9 @@ class Application extends BaseApplication
         $commands = parent::getDefaultCommands();
 
         $commands[] = new VersionCommand();
-        $commands[] = new GetConfigCommand();
-        $commands[] = new SetConfigCommand();
-        $commands[] = new DebugAccesskeyCommand();
+        $commands[] = new GetConfigCommand($this->getManagerConfig());
+        $commands[] = new SetConfigCommand($this->getManagerConfig());
+        $commands[] = new DebugAccesskeyCommand($this->getProjectDir());
 
         return $commands;
     }
