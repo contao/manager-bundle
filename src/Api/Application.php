@@ -12,7 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Api;
 
-use Contao\ManagerBundle\Api\Command\DebugAccesskeyCommand;
+use Contao\ManagerBundle\Api\Command\RemoveAccesskeyCommand;
+use Contao\ManagerBundle\Api\Command\SetAccesskeyCommand;
 use Contao\ManagerBundle\Api\Command\GetConfigCommand;
 use Contao\ManagerBundle\Api\Command\SetConfigCommand;
 use Contao\ManagerBundle\Api\Command\VersionCommand;
@@ -44,16 +45,6 @@ class Application extends BaseApplication
         $this->projectDir = realpath($projectDir) ?: $projectDir;
 
         parent::__construct('contao-api', self::VERSION);
-    }
-
-    /**
-     * Gets the project root directory.
-     *
-     * @return string
-     */
-    public function getProjectDir(): string
-    {
-        return $this->projectDir;
     }
 
     /**
@@ -111,7 +102,8 @@ class Application extends BaseApplication
         $commands[] = new VersionCommand();
         $commands[] = new GetConfigCommand($this->getManagerConfig());
         $commands[] = new SetConfigCommand($this->getManagerConfig());
-        $commands[] = new DebugAccesskeyCommand($this->getProjectDir());
+        $commands[] = new SetAccesskeyCommand($this->projectDir);
+        $commands[] = new RemoveAccesskeyCommand($this->projectDir);
 
         return $commands;
     }

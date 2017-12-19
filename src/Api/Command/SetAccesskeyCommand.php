@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-class DebugAccesskeyCommand extends Command
+class SetAccesskeyCommand extends Command
 {
     /**
      * @var string
@@ -41,9 +41,9 @@ class DebugAccesskeyCommand extends Command
         parent::configure();
 
         $this
-            ->setName('debug:access-key')
-            ->setDescription('Sets or removes the debug access key.')
-            ->addArgument('value', InputArgument::OPTIONAL, 'The access key to write, or empty to remove it.')
+            ->setName('access-key:set')
+            ->setDescription('Sets the debug access key.')
+            ->addArgument('value', InputArgument::REQUIRED, 'The access key to set.')
         ;
     }
 
@@ -52,24 +52,12 @@ class DebugAccesskeyCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
-        $this->updateDotEnv('APP_DEV_ACCESSKEY', $input->getArgument('value'));
-    }
-
-    /**
-     * Appends value to the .env file, removing a line with the given key.
-     *
-     * @param string      $key
-     * @param string|null $value
-     */
-    private function updateDotEnv(string $key, ?string $value): void
-    {
         $fs = new Filesystem();
 
         $path = $this->projectDir.'/.env';
-        $exists = $fs->exists($path);
         $content = '';
 
-        if ($exists) {
+        if ($fs->exists($path)) {
             $lines = file($path, FILE_IGNORE_NEW_LINES);
 
             if (false === $lines) {
@@ -77,7 +65,7 @@ class DebugAccesskeyCommand extends Command
             }
 
             foreach ($lines as $line) {
-                if (0 === strpos($line, $key.'=')) {
+                if (0 === strpos($line, 'APP_DEV_ACCESSKEY=')) {
                     continue;
                 }
 
@@ -85,17 +73,7 @@ class DebugAccesskeyCommand extends Command
             }
         }
 
-        if (null !== $value) {
-            $content .= $key.'='.escapeshellarg($value)."\n";
-        }
-
-        if (empty($content)) {
-            if ($exists) {
-                $fs->remove($path);
-            }
-
-            return;
-        }
+        $content .= 'APP_DEV_ACCESSKEY='.escapeshellarg($input->getArgument('value'))."\n";
 
         $fs->dumpFile($path, $content);
     }
