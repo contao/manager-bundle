@@ -43,7 +43,7 @@ class SetAccesskeyCommand extends Command
         $this
             ->setName('access-key:set')
             ->setDescription('Sets the debug access key.')
-            ->addArgument('value', InputArgument::REQUIRED, 'The access key to set.')
+            ->addArgument('value', InputArgument::REQUIRED, 'The access key')
         ;
     }
 
@@ -53,7 +53,6 @@ class SetAccesskeyCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $fs = new Filesystem();
-
         $path = $this->projectDir.'/.env';
         $content = '';
 

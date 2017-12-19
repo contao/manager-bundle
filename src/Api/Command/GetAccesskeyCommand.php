@@ -14,7 +14,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Dotenv\Dotenv;
-use Symfony\Component\Filesystem\Filesystem;
 
 class GetAccesskeyCommand extends Command
 {
@@ -51,11 +50,9 @@ class GetAccesskeyCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
-        $fs = new Filesystem();
-
         $path = $this->projectDir.'/.env';
 
-        if (!$fs->exists($path)) {
+        if (!file_exists($path)) {
             return;
         }
 

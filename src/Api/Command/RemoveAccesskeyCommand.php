@@ -51,7 +51,6 @@ class RemoveAccesskeyCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $fs = new Filesystem();
-
         $path = $this->projectDir.'/.env';
 
         if (!$fs->exists($path)) {
@@ -75,10 +74,8 @@ class RemoveAccesskeyCommand extends Command
 
         if (empty($content)) {
             $fs->remove($path);
-
-            return;
+        } else {
+            $fs->dumpFile($path, $content);
         }
-
-        $fs->dumpFile($path, $content);
     }
 }
