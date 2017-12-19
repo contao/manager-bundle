@@ -108,7 +108,7 @@ class ContaoKernel extends Kernel
     public function getPluginLoader(): PluginLoader
     {
         if (null === $this->pluginLoader) {
-            $this->pluginLoader = new PluginLoader();
+            $this->pluginLoader = new PluginLoader($this->getProjectDir().'/vendor/composer/installed.json');
         }
 
         return $this->pluginLoader;
