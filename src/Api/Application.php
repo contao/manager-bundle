@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Api;
 
+use Contao\ManagerBundle\Api\Command\GetAccesskeyCommand;
 use Contao\ManagerBundle\Api\Command\RemoveAccesskeyCommand;
 use Contao\ManagerBundle\Api\Command\SetAccesskeyCommand;
 use Contao\ManagerBundle\Api\Command\GetConfigCommand;
@@ -102,6 +103,7 @@ class Application extends BaseApplication
         $commands[] = new VersionCommand();
         $commands[] = new GetConfigCommand($this->getManagerConfig());
         $commands[] = new SetConfigCommand($this->getManagerConfig());
+        $commands[] = new GetAccesskeyCommand($this->projectDir);
         $commands[] = new SetAccesskeyCommand($this->projectDir);
         $commands[] = new RemoveAccesskeyCommand($this->projectDir);
 
