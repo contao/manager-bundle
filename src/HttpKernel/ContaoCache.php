@@ -54,7 +54,7 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     protected function createStore()
     {
         return new Psr6Store([
-            'cache_directory' => $this->cacheDir,
+            'cache_directory' => $this->cacheDir ?: $this->kernel->getCacheDir().'/http_cache',
             'cache_tags_header' => 'X-Cache-Tags',
         ]);
     }
