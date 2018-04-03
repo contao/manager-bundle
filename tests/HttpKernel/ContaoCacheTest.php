@@ -59,6 +59,11 @@ class ContaoCacheTest extends ContaoTestCase
         $preInvalidateListeners = $dispatcher->getListeners(Events::PRE_INVALIDATE);
         $this->assertInstanceOf(PurgeListener::class, $preInvalidateListeners[0][0]);
         $this->assertInstanceOf(PurgeTagsListener::class, $preInvalidateListeners[1][0]);
+    }
+
+    public function testCreatesTheCacheStore()
+    {
+        $cache = new ContaoCache($this->createMock(KernelInterface::class), $this->getTempDir());
 
         $this->assertInstanceOf(Psr6Store::class, $cache->getStore());
     }
