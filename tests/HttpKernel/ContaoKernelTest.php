@@ -20,6 +20,7 @@ use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
+use FOS\HttpCache\SymfonyCache\HttpCacheProvider;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -197,6 +198,13 @@ class ContaoKernelTest extends ContaoTestCase
         $kernel->registerContainerConfiguration($loader);
 
         $this->assertSame('sendmail', $container->getParameter('mailer_transport'));
+    }
+
+    public function testImplementsFOSHttpCacheProvider(): void
+    {
+        $kernel = $this->mockKernel($this->getTempDir());
+
+        $this->assertInstanceOf(HttpCacheProvider::class, $kernel);
     }
 
     /**

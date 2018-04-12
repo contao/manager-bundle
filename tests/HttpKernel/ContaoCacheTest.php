@@ -19,6 +19,7 @@ use FOS\HttpCache\SymfonyCache\PurgeListener;
 use FOS\HttpCache\SymfonyCache\PurgeTagsListener;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Terminal42\HeaderReplay\SymfonyCache\HeaderReplaySubscriber;
+use Toflar\Psr6HttpCacheStore\Psr6Store;
 
 class ContaoCacheTest extends ContaoTestCase
 {
@@ -64,6 +65,6 @@ class ContaoCacheTest extends ContaoTestCase
     {
         $cache = new ContaoCache($this->createMock(KernelInterface::class), $this->getTempDir());
 
-        $this->assertInstanceOf('Toflar\Psr6HttpCacheStore\Psr6Store', $cache->getStore());
+        $this->assertInstanceOf(Psr6Store::class, $cache->getStore());
     }
 }
