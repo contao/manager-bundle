@@ -13,11 +13,11 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Tests\HttpKernel;
 
 use Contao\ManagerBundle\HttpKernel\ContaoCache;
+use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\TestCase\ContaoTestCase;
 use FOS\HttpCache\SymfonyCache\Events;
 use FOS\HttpCache\SymfonyCache\PurgeListener;
 use FOS\HttpCache\SymfonyCache\PurgeTagsListener;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Terminal42\HeaderReplay\SymfonyCache\HeaderReplaySubscriber;
 use Toflar\Psr6HttpCacheStore\Psr6Store;
 
@@ -25,7 +25,7 @@ class ContaoCacheTest extends ContaoTestCase
 {
     public function testInstantiation(): void
     {
-        $cache = new ContaoCache($this->createMock(KernelInterface::class), $this->getTempDir());
+        $cache = new ContaoCache($this->createMock(ContaoKernel::class), $this->getTempDir());
 
         $this->assertInstanceOf('Contao\ManagerBundle\HttpKernel\ContaoCache', $cache);
         $this->assertInstanceOf('Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache', $cache);
@@ -33,7 +33,7 @@ class ContaoCacheTest extends ContaoTestCase
 
     public function testAddsTheEventSubscribers(): void
     {
-        $cache = new ContaoCache($this->createMock(KernelInterface::class), $this->getTempDir());
+        $cache = new ContaoCache($this->createMock(ContaoKernel::class), $this->getTempDir());
         $dispatcher = $cache->getEventDispatcher();
         $preHandleListeners = $dispatcher->getListeners(Events::PRE_HANDLE);
         $headerReplayListener = $preHandleListeners[0][0];
@@ -63,7 +63,7 @@ class ContaoCacheTest extends ContaoTestCase
 
     public function testCreatesTheCacheStore(): void
     {
-        $cache = new ContaoCache($this->createMock(KernelInterface::class), $this->getTempDir());
+        $cache = new ContaoCache($this->createMock(ContaoKernel::class), $this->getTempDir());
 
         $this->assertInstanceOf(Psr6Store::class, $cache->getStore());
     }
