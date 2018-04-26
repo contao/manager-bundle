@@ -27,12 +27,11 @@ ContaoKernel::setProjectDir(\dirname(__DIR__));
 $kernel = new ContaoKernel('prod', false);
 
 // Enable the Symfony reverse proxy
-$cache = new ContaoCache($kernel);
-$kernel->setHttpCache($cache);
+$kernel = new ContaoCache($kernel);
 Request::enableHttpMethodParameterOverride();
 
 // Handle the request
 $request = Request::createFromGlobals();
-$response = $cache->handle($request);
+$response = $kernel->handle($request);
 $response->send();
-$cache->terminate($request, $response);
+$kernel->terminate($request, $response);
