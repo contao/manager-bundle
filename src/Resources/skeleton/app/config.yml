@@ -90,7 +90,7 @@ nelmio_security:
         enabled: true
         mode_block: true
 
-# FOS HttpCache
+# FOS HttpCache configuration
 fos_http_cache:
     proxy_client:
         symfony:
