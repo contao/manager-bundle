@@ -26,13 +26,15 @@ if (file_exists(__DIR__.'/../.env')) {
     (new Dotenv())->load(__DIR__.'/../.env');
 }
 
-// see https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/3.3/public/index.php#L27
+// See https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/3.3/public/index.php#L27
 if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? false) {
     Request::setTrustedProxies(explode(',', $trustedProxies), Request::HEADER_X_FORWARDED_ALL ^ Request::HEADER_X_FORWARDED_HOST);
 }
+
 if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? false) {
     Request::setTrustedHosts(explode(',', $trustedHosts));
 }
+
 unset($trustedProxies, $trustedHosts);
 
 Plugin::autoloadModules(__DIR__.'/../system/modules');
