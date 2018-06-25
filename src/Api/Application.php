@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Api;
 
-use Contao\ManagerBundle\Api\Command\GetDotEnvCommand;
 use Contao\ManagerBundle\Api\Command\GetConfigCommand;
+use Contao\ManagerBundle\Api\Command\GetDotEnvCommand;
 use Contao\ManagerBundle\Api\Command\RemoveDotEnvCommand;
-use Contao\ManagerBundle\Api\Command\SetDotEnvCommand;
 use Contao\ManagerBundle\Api\Command\SetConfigCommand;
+use Contao\ManagerBundle\Api\Command\SetDotEnvCommand;
 use Contao\ManagerBundle\Api\Command\VersionCommand;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputArgument;
