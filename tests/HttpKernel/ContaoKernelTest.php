@@ -92,22 +92,23 @@ class ContaoKernelTest extends ContaoTestCase
         $this->assertSame($kernel->getProjectDir().'/var/logs', $kernel->getLogDir());
     }
 
-    public function testSetsDisabledPackagesInPluginLoader()
+    public function testSetsDisabledPackagesInPluginLoader(): void
     {
         $config = $this->createMock(ManagerConfig::class);
+
         $config
             ->expects($this->once())
             ->method('all')
             ->willReturn([
                 'contao_manager' => [
-                    'disabled_packages' => ['foo/bar']
+                    'disabled_packages' => ['foo/bar'],
                 ],
             ])
         ;
 
         ContaoKernel::setProjectDir($this->getTempDir());
-        $kernel = new ContaoKernel('prod', true);
 
+        $kernel = new ContaoKernel('prod', true);
         $kernel->setManagerConfig($config);
 
         $pluginLoader = $kernel->getPluginLoader();
