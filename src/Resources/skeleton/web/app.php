@@ -47,8 +47,9 @@ if (!($_SERVER['DISABLE_HTTP_CACHE'] ?? false)) {
     $kernel = new ContaoCache($kernel);
 }
 
-// Handle the request
 Request::enableHttpMethodParameterOverride();
+
+// Handle the request
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);
 $response->send();
