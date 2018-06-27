@@ -13,11 +13,11 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Tests\Api\Command;
 
 use Contao\ManagerBundle\Api\Command\SetDotEnvCommand;
-use PHPUnit\Framework\TestCase;
+use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 
-class SetDotEnvCommandTest extends TestCase
+class SetDotEnvCommandTest extends ContaoTestCase
 {
     /**
      * @var Filesystem
@@ -47,11 +47,8 @@ class SetDotEnvCommandTest extends TestCase
         parent::setUp();
 
         $this->filesystem = new Filesystem();
-        $this->tempdir = sys_get_temp_dir().'/'.uniqid('SetDotEnvCommand-', false);
+        $this->tempdir = $this->getTempDir();
         $this->tempfile = $this->tempdir.'/.env';
-
-        $this->filesystem->mkdir($this->tempdir);
-
         $this->command = new SetDotEnvCommand($this->tempdir);
     }
 
@@ -88,7 +85,6 @@ class SetDotEnvCommandTest extends TestCase
 
         $this->assertSame('', $tester->getDisplay());
         $this->assertSame(0, $tester->getStatusCode());
-
         $this->assertFileExists($this->tempfile);
         $this->assertSame("FOO='BAR'\n", file_get_contents($this->tempfile));
     }
@@ -102,7 +98,6 @@ class SetDotEnvCommandTest extends TestCase
 
         $this->assertSame('', $tester->getDisplay());
         $this->assertSame(0, $tester->getStatusCode());
-
         $this->assertFileExists($this->tempfile);
         $this->assertSame("BAR='FOO'\nFOO='BAR'\n", file_get_contents($this->tempfile));
     }
@@ -116,7 +111,6 @@ class SetDotEnvCommandTest extends TestCase
 
         $this->assertSame('', $tester->getDisplay());
         $this->assertSame(0, $tester->getStatusCode());
-
         $this->assertFileExists($this->tempfile);
         $this->assertSame("BAR='FOO'\nFOO='BAR'\n", file_get_contents($this->tempfile));
     }
@@ -128,7 +122,6 @@ class SetDotEnvCommandTest extends TestCase
 
         $this->assertSame('', $tester->getDisplay());
         $this->assertSame(0, $tester->getStatusCode());
-
         $this->assertFileExists($this->tempfile);
         $this->assertSame("FOO='UNESCAPED '\'' STRING'\n", file_get_contents($this->tempfile));
     }

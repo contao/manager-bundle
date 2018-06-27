@@ -13,11 +13,11 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Tests\Api\Command;
 
 use Contao\ManagerBundle\Api\Command\RemoveDotEnvCommand;
-use PHPUnit\Framework\TestCase;
+use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 
-class RemoveDotEnvCommandTest extends TestCase
+class RemoveDotEnvCommandTest extends ContaoTestCase
 {
     /**
      * @var Filesystem
@@ -47,11 +47,8 @@ class RemoveDotEnvCommandTest extends TestCase
         parent::setUp();
 
         $this->filesystem = new Filesystem();
-        $this->tempdir = sys_get_temp_dir().'/'.uniqid('RemoveDotEnvCommand-', false);
+        $this->tempdir = $this->getTempDir();
         $this->tempfile = $this->tempdir.'/.env';
-
-        $this->filesystem->mkdir($this->tempdir);
-
         $this->command = new RemoveDotEnvCommand($this->tempdir);
     }
 
@@ -86,7 +83,6 @@ class RemoveDotEnvCommandTest extends TestCase
 
         $this->assertSame('', $tester->getDisplay());
         $this->assertSame(0, $tester->getStatusCode());
-
         $this->assertFileExists($this->tempfile);
         $this->assertSame("BAR='FOO'\n", file_get_contents($this->tempfile));
     }
@@ -100,7 +96,6 @@ class RemoveDotEnvCommandTest extends TestCase
 
         $this->assertSame('', $tester->getDisplay());
         $this->assertSame(0, $tester->getStatusCode());
-
         $this->assertFileNotExists($this->tempfile);
     }
 
