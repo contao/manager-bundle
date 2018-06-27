@@ -5,6 +5,16 @@
     </FilesMatch>
 </IfModule>
 
+# Automatically add caching headers for 1 year on assets residing
+# in assets/images which are all thumbnails that contain a hash
+# in their respective filenames.
+<IfModule mod_headers.c>
+  <IfModule mod_rewrite.c>
+    RewriteRule ^assets/images/.+$ - [ENV=CONTAO_THUMBNAILS:true]
+    Header set Cache-Control "max-age=31536000" env=CONTAO_THUMBNAILS
+  </IfModule>
+</IfModule>
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
