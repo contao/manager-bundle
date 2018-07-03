@@ -59,6 +59,28 @@ class ApplicationTest extends TestCase
         $this->assertSame($pluginLoader, $application->getPluginLoader());
     }
 
+    public function testSetsDisabledPackagesInPluginLoader(): void
+    {
+        $config = $this->createMock(ManagerConfig::class);
+
+        $config
+            ->expects($this->once())
+            ->method('all')
+            ->willReturn([
+                'contao_manager' => [
+                     'disabled_packages' => ['foo/bar'],
+                ],
+            ])
+        ;
+
+        $application = new Application(sys_get_temp_dir());
+        $application->setManagerConfig($config);
+
+        $pluginLoader = $application->getPluginLoader();
+
+        $this->assertSame(['foo/bar'], $pluginLoader->getDisabledPackages());
+    }
+
     public function testReturnsNewInstanceOfManagerConfigWithProjectDir()
     {
         $application = new Application(__DIR__.'/../Fixtures/Api');
