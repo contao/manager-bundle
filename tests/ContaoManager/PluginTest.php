@@ -215,6 +215,9 @@ class PluginTest extends ContaoTestCase
                     'TRUSTED_HOSTS',
                     'DISABLE_HTTP_CACHE',
                 ],
+                'config' => [
+                    'disable-packages',
+                ],
             ],
             $plugin->getApiFeatures()
         );
