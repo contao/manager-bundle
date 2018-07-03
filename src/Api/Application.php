@@ -26,7 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Application extends BaseApplication
 {
-    public const VERSION = '2';
+    public const VERSION = '1';
 
     /**
      * @var string

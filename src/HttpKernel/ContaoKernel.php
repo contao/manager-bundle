@@ -110,14 +110,6 @@ class ContaoKernel extends Kernel
     {
         if (null === $this->pluginLoader) {
             $this->pluginLoader = new PluginLoader();
-
-            $config = $this->getManagerConfig()->all();
-
-            if (isset($config['contao_manager']['disabled_packages'])
-                && is_array($config['contao_manager']['disabled_packages'])
-            ) {
-                $this->pluginLoader->setDisabledPackages($config['contao_manager']['disabled_packages']);
-            }
         }
 
         return $this->pluginLoader;
