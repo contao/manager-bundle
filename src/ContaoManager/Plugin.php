@@ -243,14 +243,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * {@inheritdoc}
      */
-    public function overrideApiFeatures(array $features): array
-    {
-        return $features;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getApiCommands(): array
     {
         return [

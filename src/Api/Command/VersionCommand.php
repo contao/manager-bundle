@@ -86,10 +86,6 @@ class VersionCommand extends Command
             $features[$packageName] = $plugin->getApiFeatures();
         }
 
-        foreach ($plugins as $plugin) {
-            $features = $plugin->overrideApiFeatures($features);
-        }
-
         return $features;
     }
 }
