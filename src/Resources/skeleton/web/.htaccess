@@ -1,10 +1,3 @@
-<IfModule mod_headers.c>
-    # Allow access from all domains for webfonts (see contao/core-bundle#528)
-    <FilesMatch "\.(ttf|ttc|otf|eot|woff2?|font\.css)$">
-        Header set Access-Control-Allow-Origin "*"
-    </FilesMatch>
-</IfModule>
-
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
@@ -15,6 +8,9 @@
     <IfModule mod_headers.c>
         RewriteRule ^(assets|bundles)/.+$ - [ENV=CONTAO_ASSETS:true]
         Header set Cache-Control "max-age=31536000" env=CONTAO_ASSETS
+
+        RewriteRule ^assets/tinymce4/js/skins.+$ - [ENV=CONTAO_TINYMCE_SKINS:true]
+        Header set Access-Control-Allow-Origin "*" env=CONTAO_TINYMCE_SKINS
     </IfModule>
 
     # Determine the RewriteBase automatically and set it as environment variable.
