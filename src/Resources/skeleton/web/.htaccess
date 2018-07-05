@@ -9,8 +9,9 @@
     RewriteEngine On
 
     # Automatically add caching for 1 year on assets residing
-    # in /assets as well as /bundles which are all thumbnails that contain a hash
-    # in their respective filenames.
+    # in /assets as well as /bundles which are all assets that contain a hash
+    # in their respective filenames or are called using some ?version parameter
+    # for cache busting.
     <IfModule mod_headers.c>
         RewriteRule ^(assets|bundles)/.+$ - [ENV=CONTAO_ASSETS:true]
         Header set Cache-Control "max-age=31536000" env=CONTAO_ASSETS
