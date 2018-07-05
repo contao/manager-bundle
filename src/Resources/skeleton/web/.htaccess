@@ -6,11 +6,11 @@
         # in /assets as well as /bundles which are all assets that contain a hash
         # in their respective filenames or are called using some ?version parameter
         # for cache busting.
-        RewriteRule ^(assets|bundles)/.+$ - [ENV=CONTAO_ASSETS:true]
+        RewriteRule ^(assets|bundles)/ - [ENV=CONTAO_ASSETS:true]
         Header set Cache-Control "max-age=31536000" env=CONTAO_ASSETS
 
         # Allow CORS on any tinymce4 skins
-        RewriteRule ^assets/tinymce4/js/skins.+$ - [ENV=CONTAO_TINYMCE_SKINS:true]
+        RewriteRule ^assets/tinymce4/js/skins/contao/fonts/ - [ENV=CONTAO_TINYMCE_SKINS:true]
         Header set Access-Control-Allow-Origin "*" env=CONTAO_TINYMCE_SKINS
     </IfModule>
 
