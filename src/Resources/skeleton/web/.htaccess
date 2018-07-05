@@ -2,14 +2,12 @@
     RewriteEngine On
 
     <IfModule mod_headers.c>
-        # Automatically add caching for 1 year on assets residing
-        # in /assets as well as /bundles which are all assets that contain a hash
-        # in their respective filenames or are called using some ?version parameter
-        # for cache busting.
+        # Assets in /assets and /bundles either contain a hash in their filename
+        # or are called with a ?version suffix, therefore cache them for 1 year.
         RewriteRule ^(assets|bundles)/ - [ENV=CONTAO_ASSETS:true]
         Header set Cache-Control "max-age=31536000" env=CONTAO_ASSETS
 
-        # Allow CORS on any tinymce4 skins
+        # Allow CORS on The Contao TinyMCE skin.
         RewriteRule ^assets/tinymce4/js/skins/contao/fonts/ - [ENV=CONTAO_TINYMCE_SKIN:true]
         Header set Access-Control-Allow-Origin "*" env=CONTAO_TINYMCE_SKIN
     </IfModule>
