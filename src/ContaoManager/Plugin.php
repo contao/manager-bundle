@@ -29,6 +29,8 @@ use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
+use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Exception\DriverException;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
@@ -55,11 +57,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      * @var string|null
      */
     private static $autoloadModules;
-
-    /**
-     * @var ExtensionPlugin
-     */
-    private $extensionPlugin;
 
     /**
      * Sets the path to enable autoloading of legacy Contao modules.
@@ -194,18 +191,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * {@inheritdoc}
      */
-    public function getExtensionConfig($extensionName, array $extensionConfigs, PluginContainerBuilder $container): array
-    {
-        if (!$this->extensionPlugin) {
-            $this->extensionPlugin = new ExtensionPlugin();
-        }
-
-        return $this->extensionPlugin->getExtensionConfig($extensionName, $extensionConfigs, $container);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getApiFeatures(): array
     {
         return [
@@ -233,5 +218,98 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             SetDotEnvCommand::class,
             RemoveDotEnvCommand::class,
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getExtensionConfig($extensionName, array $extensionConfigs, PluginContainerBuilder $container): array
+    {
+        switch ($extensionName) {
+            case 'contao':
+                return $this->handlePrependLocale($extensionConfigs, $container);
+
+            case 'doctrine':
+                return $this->addDefaultServerVersion($extensionConfigs, $container);
+
+            default:
+                return $extensionConfigs;
+        }
+    }
+
+    /**
+     * Adds backwards compatibility for the %prepend_locale% parameter.
+     *
+     * @param array            $extensionConfigs
+     * @param ContainerBuilder $container
+     *
+     * @return array
+     */
+    private function handlePrependLocale(array $extensionConfigs, ContainerBuilder $container): array
+    {
+        if (!$container->hasParameter('prepend_locale')) {
+            return $extensionConfigs;
+        }
+
+        foreach ($extensionConfigs as $extensionConfig) {
+            if (isset($extensionConfig['contao']['prepend_locale'])) {
+                return $extensionConfigs;
+            }
+        }
+
+        @trigger_error('Defining the "prepend_locale" parameter in the parameters.yml file has been deprecated and will no longer work in Contao 5. Define the "contao.prepend_locale" parameter in the config.yml or config_prod.yml instead.', E_USER_DEPRECATED);
+
+        $extensionConfigs[] = [
+            'contao' => [
+                'prepend_locale' => '%prepend_locale%',
+            ],
+        ];
+
+        return $extensionConfigs;
+    }
+
+    /**
+     * Adds the database server version to the Doctrine DBAL configuration.
+     *
+     * @param array            $extensionConfigs
+     * @param ContainerBuilder $container
+     *
+     * @return array
+     */
+    private function addDefaultServerVersion(array $extensionConfigs, ContainerBuilder $container): array
+    {
+        $params = [];
+
+        foreach ($extensionConfigs as $extensionConfig) {
+            if (isset($extensionConfig['dbal']['connections']['default'])) {
+                $params = array_merge($params, $extensionConfig['dbal']['connections']['default']);
+            }
+        }
+
+        $parameterBag = $container->getParameterBag();
+
+        foreach ($params as $key => $value) {
+            $params[$key] = $parameterBag->resolveValue($value);
+        }
+
+        // If there are no DB credentials yet (install tool), we have to set
+        // the server version to prevent a DBAL exception (see #1422)
+        try {
+            $connection = DriverManager::getConnection($params);
+            $connection->connect();
+            $connection->close();
+        } catch (DriverException $e) {
+            $extensionConfigs[] = [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'server_version' => '5.5',
+                        ],
+                    ],
+                ],
+            ];
+        }
+
+        return $extensionConfigs;
     }
 }
