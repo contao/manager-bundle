@@ -29,8 +29,6 @@ use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle;
-use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Exception\DriverException;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
@@ -57,6 +55,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      * @var string|null
      */
     private static $autoloadModules;
+
+    /**
+     * @var ExtensionPlugin
+     */
+    private $extensionPlugin;
 
     /**
      * Sets the path to enable autoloading of legacy Contao modules.
@@ -193,43 +196,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      */
     public function getExtensionConfig($extensionName, array $extensionConfigs, PluginContainerBuilder $container): array
     {
-        if ('doctrine' !== $extensionName) {
-            return $extensionConfigs;
+        if (!$this->extensionPlugin) {
+            $this->extensionPlugin = new ExtensionPlugin();
         }
 
-        $params = [];
-
-        foreach ($extensionConfigs as $extensionConfig) {
-            if (isset($extensionConfig['dbal']['connections']['default'])) {
-                $params = array_merge($params, $extensionConfig['dbal']['connections']['default']);
-            }
-        }
-
-        $parameterBag = $container->getParameterBag();
-
-        foreach ($params as $key => $value) {
-            $params[$key] = $parameterBag->resolveValue($value);
-        }
-
-        // If there are no DB credentials yet (install tool), we have to set
-        // the server version to prevent a DBAL exception (see #1422)
-        try {
-            $connection = DriverManager::getConnection($params);
-            $connection->connect();
-            $connection->close();
-        } catch (DriverException $e) {
-            $extensionConfigs[] = [
-                'dbal' => [
-                    'connections' => [
-                        'default' => [
-                            'server_version' => '5.5',
-                        ],
-                    ],
-                ],
-            ];
-        }
-
-        return $extensionConfigs;
+        return $this->extensionPlugin->getExtensionConfig($extensionName, $extensionConfigs, $container);
     }
 
     /**
