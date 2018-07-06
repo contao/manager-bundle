@@ -7,7 +7,7 @@
         RewriteRule ^(assets|bundles)/ - [ENV=CONTAO_ASSETS:true]
         Header set Cache-Control "max-age=31536000" env=CONTAO_ASSETS
 
-        # Allow CORS on The Contao TinyMCE skin.
+        # Allow CORS on the Contao TinyMCE skin.
         RewriteRule ^assets/tinymce4/js/skins/contao/fonts/ - [ENV=CONTAO_TINYMCE_SKIN:true]
         Header set Access-Control-Allow-Origin "*" env=CONTAO_TINYMCE_SKIN
     </IfModule>
