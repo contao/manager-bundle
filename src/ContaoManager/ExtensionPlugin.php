@@ -25,12 +25,46 @@ final class ExtensionPlugin implements ExtensionPluginInterface
     public function getExtensionConfig($extensionName, array $extensionConfigs, ContainerBuilder $container)
     {
         switch ($extensionName) {
+            case 'contao':
+                return $this->fixContaoConfig($extensionConfigs, $container);
+
             case 'doctrine':
                 return $this->fixDoctrineConfig($extensionConfigs, $container);
 
             default:
                 return $extensionConfigs;
         }
+    }
+
+    /**
+     * Adds backwards compatibility for the %prepend_locale% parameter.
+     *
+     * @param array            $extensionConfigs
+     * @param ContainerBuilder $container
+     *
+     * @return array
+     */
+    private function fixContaoConfig(array $extensionConfigs, ContainerBuilder $container)
+    {
+        if (!$container->hasParameter('prepend_locale')) {
+            return $extensionConfigs;
+        }
+
+        foreach ($extensionConfigs as $extensionConfig) {
+            if (isset($extensionConfig['contao']['prepend_locale'])) {
+                return $extensionConfigs;
+            }
+        }
+
+        @trigger_error('Defining the "prepend_locale" parameter in the parameters.yml file has been deprecated and will no longer work in Contao 5. Define the "contao.prepend_locale" parameter in the config.yml or config_prod.yml instead.', E_USER_DEPRECATED);
+
+        $extensionConfigs[] = [
+            'contao' => [
+                'prepend_locale' => '%prepend_locale%',
+            ],
+        ];
+
+        return $extensionConfigs;
     }
 
     /**

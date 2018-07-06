@@ -200,16 +200,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             $loader->load($rootDir.'/config/parameters.yml');
         }
 
-        // Support the "prepend_locale" parameter in the parameters.yml file for backwards compatibility
-        $loader->load(
-            function (ContainerBuilder $container): void {
-                if ($container->hasParameter('prepend_locale')) {
-                    @trigger_error('Defining the "prepend_locale" parameter in the parameters.yml file has been deprecated and will no longer work in Contao 5. Define the "contao.prepend_locale" parameter in the config.yml or config_prod.yml instead.', E_USER_DEPRECATED);
-                    $container->setParameter('contao.prepend_locale', $container->getParameter('prepend_locale'));
-                }
-            }
-        );
-
         $config = $this->getManagerConfig()->all();
         $plugins = $this->getPluginLoader()->getInstancesOf(PluginLoader::CONFIG_PLUGINS);
 
