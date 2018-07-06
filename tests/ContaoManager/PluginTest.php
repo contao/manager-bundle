@@ -184,11 +184,8 @@ class PluginTest extends ContaoTestCase
         $this->assertSame('/_profiler/foobar', $routes[1]->getPath());
     }
 
-    public function testReturnsApiCommands()
+    public function testReturnsApiCommands(): void
     {
-        $plugin = new Plugin();
-        $commands = $plugin->getApiCommands();
-
         $files = Finder::create()
             ->name('*.php')
             ->in(__DIR__.'/../../src/ContaoManager/ApiCommand')
@@ -197,16 +194,14 @@ class PluginTest extends ContaoTestCase
         /** @var SplFileInfo $file */
         foreach ($files as $file) {
             $this->assertContains(
-                'Contao\ManagerBundle\ContaoManager\ApiCommand\\' . $file->getBasename('.php'),
-                $commands
+                'Contao\ManagerBundle\ContaoManager\ApiCommand\\'.$file->getBasename('.php'),
+                (new Plugin())->getApiCommands()
             );
         }
     }
 
-    public function testReturnsApiFeatures()
+    public function testReturnsApiFeatures(): void
     {
-        $plugin = new Plugin();
-
         $this->assertSame(
             [
                 'dot-env' => [
@@ -219,7 +214,7 @@ class PluginTest extends ContaoTestCase
                     'disable-packages',
                 ],
             ],
-            $plugin->getApiFeatures()
+            (new Plugin())->getApiFeatures()
         );
     }
 }

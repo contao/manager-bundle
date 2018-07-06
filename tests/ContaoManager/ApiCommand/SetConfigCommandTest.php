@@ -78,11 +78,10 @@ class SetConfigCommandTest extends TestCase
 
     public function testThrowsExceptionWhenJsonIsInvalid(): void
     {
-        $commandTester = new CommandTester($this->command);
-
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Invalid JSON:');
 
+        $commandTester = new CommandTester($this->command);
         $commandTester->execute(['json' => 'foobar']);
 
         $this->assertSame(0, $commandTester->getStatusCode());

@@ -245,8 +245,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 'DISABLE_HTTP_CACHE',
             ],
             'config' => [
-                'disable-packages'
-            ]
+                'disable-packages',
+            ],
         ];
     }
 

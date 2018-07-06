@@ -114,7 +114,7 @@ class GetDotEnvCommandTest extends ContaoTestCase
         $this->assertSame(0, $tester->getStatusCode());
     }
 
-    public function testOutputsAllKeysIfNoArgumentIsGiven()
+    public function testOutputsAllKeysIfNoArgumentIsGiven(): void
     {
         $this->filesystem->dumpFile($this->tempfile, "FOO=BAR\nBAR=BAZ");
 

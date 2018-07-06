@@ -38,9 +38,9 @@ class VersionCommandTest extends TestCase
     private $command;
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -54,7 +54,6 @@ class VersionCommandTest extends TestCase
 
         $this->command = new VersionCommand($this->application);
     }
-
 
     public function testInstantiation(): void
     {
@@ -94,7 +93,7 @@ class VersionCommandTest extends TestCase
         $this->assertSame(0, $commandTester->getStatusCode());
     }
 
-    public function testOutputsPluginCommands()
+    public function testOutputsPluginCommands(): void
     {
         $this->application
             ->expects($this->once())
@@ -157,7 +156,7 @@ class VersionCommandTest extends TestCase
                 'foo/bar-bundle' => [
                     'foo' => 'bar',
                     'bar' => 'baz',
-                ]
+                ],
             ],
         ]);
 

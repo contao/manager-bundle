@@ -18,42 +18,42 @@ use Contao\ManagerBundle\ContaoManager\ApiCommand\GetConfigCommand;
 use Contao\ManagerBundle\ContaoManagerBundle;
 use Contao\ManagerPlugin\Api\ApiPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
-use PHPUnit\Framework\TestCase;
+use Contao\TestCase\ContaoTestCase;
 
-class ApplicationTest extends TestCase
+class ApplicationTest extends ContaoTestCase
 {
     public function testInstantiation(): void
     {
-        $this->assertInstanceOf('Contao\ManagerBundle\Api\Application', new Application(sys_get_temp_dir()));
+        $this->assertInstanceOf('Contao\ManagerBundle\Api\Application', $this->getApplication());
     }
 
-    public function testReturnsCorrectApplicationNameAndVersion()
+    public function testReturnsCorrectApplicationNameAndVersion(): void
     {
-        $application = new Application(sys_get_temp_dir());
+        $application = $this->getApplication();
 
         $this->assertSame('contao-api', $application->getName());
         $this->assertSame(Application::VERSION, $application->getVersion());
     }
 
-    public function testReturnsProjectDir()
+    public function testReturnsProjectDir(): void
     {
-        $application = new Application('/foo/bar');
+        $application = $this->getApplication('/foo/bar');
 
         $this->assertSame('/foo/bar', $application->getProjectDir());
     }
 
-    public function testReturnsNewInstanceOfPluginLoader()
+    public function testReturnsNewInstanceOfPluginLoader(): void
     {
-        $application = new Application(sys_get_temp_dir());
+        $application = $this->getApplication();
 
-        $this->assertInstanceOf(PluginLoader::class, $application->getPluginLoader());
+        $this->assertInstanceOf('Contao\ManagerPlugin\PluginLoader', $application->getPluginLoader());
     }
 
-    public function testReturnsConfiguredPluginLoader()
+    public function testReturnsConfiguredPluginLoader(): void
     {
-        $application = new Application(sys_get_temp_dir());
         $pluginLoader = $this->createMock(PluginLoader::class);
 
+        $application = $this->getApplication();
         $application->setPluginLoader($pluginLoader);
 
         $this->assertSame($pluginLoader, $application->getPluginLoader());
@@ -73,7 +73,7 @@ class ApplicationTest extends TestCase
             ])
         ;
 
-        $application = new Application(sys_get_temp_dir());
+        $application = $this->getApplication();
         $application->setManagerConfig($config);
 
         $pluginLoader = $application->getPluginLoader();
@@ -81,26 +81,26 @@ class ApplicationTest extends TestCase
         $this->assertSame(['foo/bar'], $pluginLoader->getDisabledPackages());
     }
 
-    public function testReturnsNewInstanceOfManagerConfigWithProjectDir()
+    public function testReturnsNewInstanceOfManagerConfigWithProjectDir(): void
     {
-        $application = new Application(__DIR__.'/../Fixtures/Api');
+        $application = $this->getApplication(__DIR__.'/../Fixtures/Api');
         $managerConfig = $application->getManagerConfig();
 
-        $this->assertInstanceOf(ManagerConfig::class, $managerConfig);
+        $this->assertInstanceOf('Contao\ManagerBundle\Api\ManagerConfig', $managerConfig);
         $this->assertSame(['foo' => 'bar'], $managerConfig->all());
     }
 
-    public function testReturnsConfiguredManagerConfig()
+    public function testReturnsConfiguredManagerConfig(): void
     {
-        $application = new Application(sys_get_temp_dir());
         $managerConfig = $this->createMock(ManagerConfig::class);
 
+        $application = $this->getApplication();
         $application->setManagerConfig($managerConfig);
 
         $this->assertSame($managerConfig, $application->getManagerConfig());
     }
 
-    public function testGetsCommandsFromPlugins()
+    public function testGetsCommandsFromPlugins(): void
     {
         $plugin = $this->createMock(ApiPluginInterface::class);
 
@@ -119,16 +119,17 @@ class ApplicationTest extends TestCase
             ->willReturn([$plugin])
         ;
 
-        $application = new Application(sys_get_temp_dir());
+        $application = $this->getApplication();
         $application->setPluginLoader($pluginLoader);
 
+        /* @var array $commands */
         $commands = $application->all();
 
         $this->assertCount(4, $commands);
         $this->assertArrayHasKey('config:get', $commands);
     }
 
-    public function testThrowsExceptionIfPluginReturnsInvalidCommand()
+    public function testThrowsExceptionIfPluginReturnsInvalidCommand(): void
     {
         $plugin = $this->createMock(ApiPluginInterface::class);
 
@@ -147,12 +148,28 @@ class ApplicationTest extends TestCase
             ->willReturn([$plugin])
         ;
 
-        $application = new Application(sys_get_temp_dir());
+        $application = $this->getApplication();
         $application->setPluginLoader($pluginLoader);
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException('RuntimeException');
         $this->expectExceptionMessage('"Contao\ManagerBundle\ContaoManagerBundle" is not a console command.');
 
         $application->all();
+    }
+
+    /**
+     * Returns the application.
+     *
+     * @param string|null $path
+     *
+     * @return Application
+     */
+    private function getApplication(string $path = null): Application
+    {
+        if (null === $path) {
+            $path = $this->getTempDir();
+        }
+
+        return new Application($path);
     }
 }

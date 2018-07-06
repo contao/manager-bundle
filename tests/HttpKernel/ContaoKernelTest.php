@@ -100,10 +100,10 @@ class ContaoKernelTest extends ContaoTestCase
             ->expects($this->once())
             ->method('all')
             ->willReturn([
-                             'contao_manager' => [
-                                 'disabled_packages' => ['foo/bar'],
-                             ],
-                         ])
+                'contao_manager' => [
+                    'disabled_packages' => ['foo/bar'],
+                ],
+            ])
         ;
 
         ContaoKernel::setProjectDir($this->getTempDir());
