@@ -43,6 +43,7 @@ use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
+use Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -83,6 +84,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     {
         $configs = [
             BundleConfig::create(FrameworkBundle::class),
+            BundleConfig::create(CmfRoutingBundle::class),
             BundleConfig::create(SecurityBundle::class),
             BundleConfig::create(TwigBundle::class),
             BundleConfig::create(MonologBundle::class),

@@ -23,6 +23,7 @@
         "symfony/monolog-bundle": "^3.1",
         "symfony/swiftmailer-bundle": "^3.1.5",
         "symfony/symfony": "3.4.* || 4.0.* || 4.1.*",
+        "symfony-cmf/routing-bundle": "2.1.*",
         "terminal42/header-replay-bundle": "^1.4.2",
         "toflar/psr6-symfony-http-cache-store": "^1.0.2"
     },
